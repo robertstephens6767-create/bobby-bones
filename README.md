@@ -1,0 +1,28 @@
+ame: Publish package to NPM
+
+on:
+  push:
+    branches:
+    - master # Push events on master branch
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - name: install node v24
+        uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+          registry-url: https://registry.npmjs.org
+      - name: npm ci
+        run: npm ci
+      - name: build
+        run: npm run build
+      - uses: JS-DevTools/npm-publish@v4
+        with:
+          access: public
+          token: ${{ secrets.NPM_TOKEN }}
